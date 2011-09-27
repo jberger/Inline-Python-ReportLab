@@ -12,7 +12,7 @@ use Inline::Python qw/py_eval/;
 sub ACTION_code {
   my $self = shift;
   try {
-    py_eval('from reportlab.pdfgen.canvas import Canvas');
+    py_eval('import reportlab');
   } catch {
     ## do something here to keep CPANtesters happy, like
     # exit 0 if ($ENV{'AUTOMATED_TESTING'});
