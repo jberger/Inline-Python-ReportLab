@@ -42,7 +42,9 @@ The module does not export any symbols.
 
 sub import {
   try {
-    py_eval('from reportlab.pdfgen.canvas import Canvas');
+    py_eval( <<PYTHON_HEADER );
+from reportlab.pdfgen.canvas import Canvas
+PYTHON_HEADER
   } catch {
     croak "Inline::Python could not import ReportLab, is it installed correctly?";
   }
