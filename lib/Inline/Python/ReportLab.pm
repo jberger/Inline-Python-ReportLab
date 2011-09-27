@@ -32,10 +32,6 @@ use Try::Tiny;
 use Inline::Python qw/py_eval/;
 our @ISA = 'Inline::Python::Object';
 
-BEGIN {
-  *Canvas = \&new;
-}
-
 =head1 IMPORT
 
 On importing it simply executes C<py_eval('from reportlab.pdfgen.canvas import Canvas')>, which imports the library. This croaks if the ReportLab library cannot be imported.
