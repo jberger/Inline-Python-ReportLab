@@ -43,7 +43,7 @@ The module does not export any symbols.
 sub import {
   try {
     py_eval( <<PYTHON_HEADER );
-from reportlab.pdfgen.canvas import Canvas
+import reportlab.pdfgen.canvas
 PYTHON_HEADER
   } catch {
     croak "Inline::Python could not import ReportLab, is it installed correctly?";
@@ -61,7 +61,7 @@ The constructor class method C<Canvas> (named for better analogy to the Python v
 sub Canvas {
   my $class = shift;
   my $filename = shift || croak "Must specify file name to contructor";
-  return bless(Inline::Python::Object->new('__main__', 'Canvas', $filename), $class);
+  return bless(Inline::Python::Object->new('reportlab.pdfgen.canvas', 'Canvas', $filename), $class);
 }
 
 =head1 SEE ALSO
