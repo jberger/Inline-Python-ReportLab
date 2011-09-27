@@ -4,8 +4,8 @@ use warnings;
 use Module::Build;
 
 my $class = Module::Build->subclass(
-  class => 'My::Builder',
-  code => <<'SUBCLASS_ACTION_CODE';
+  code => <<'SUBCLASS_ACTION_CODE',
+use Carp;
 use Try::Tiny;
 use Inline::Python qw/py_eval/;
 
