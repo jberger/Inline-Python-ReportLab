@@ -27,6 +27,7 @@ This module should be viewed as a starting point awaiting contributions. See L<S
 =cut
 
 use Carp;
+use Try::Tiny;
 
 use Inline::Python qw/py_eval/;
 our @ISA = 'Inline::Python::Object';
@@ -44,7 +45,11 @@ The module does not export any symbols.
 =cut
 
 sub import {
-  py_eval('from reportlab.pdfgen.canvas import Canvas');
+  try {
+    py_eval('from reportlab.pdfgen.canvas import Canvas');
+  } catch {
+    croak "Inline::Python could not import ReportLab, is it installed correctly?";
+  }
 }
 
 =head1 CONSTRUCTOR
