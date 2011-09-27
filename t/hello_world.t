@@ -16,3 +16,6 @@ $c->showPage();
 $c->save();
 
 ok( -e $file , "$file created" );
+
+unlink $file if (-e $file);
+
