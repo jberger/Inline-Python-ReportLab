@@ -54,15 +54,13 @@ sub import {
 
 =head1 CONSTRUCTOR
 
- my $c = Inline::Python::ReportLab->new('filename.pdf');
-   -- or --
  my $c = Inline::Python::ReportLab->Canvas('filename.pdf');
 
-The constructor class method C<new> (which has an alias C<Canvas> for better analogy to the Python version), requires one argument, the name of the file to be created. It returns a C<Inline::Python::ReportLab> object (which is a subclass of C<Inline::Python::Object>) which behaves like the equivalent Python object using Perl syntax.
+The constructor class method C<Canvas> (named for better analogy to the Python version), requires one argument, the name of the file to be created. It returns a C<Inline::Python::ReportLab> object (which is a subclass of C<Inline::Python::Object>) which behaves like the equivalent Python object using Perl syntax.
 
 =cut
 
-sub new {
+sub Canvas {
   my $class = shift;
   my $filename = shift || croak "Must specify file name to contructor";
   return bless(Inline::Python::Object->new('__main__', 'Canvas', $filename), $class);
