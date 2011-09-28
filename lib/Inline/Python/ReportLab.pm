@@ -30,13 +30,32 @@ use Carp;
 use Try::Tiny;
 
 use Inline::Python qw/py_eval/;
-our @ISA = 'Inline::Python::Object';
+our @ISA = qw/Inline::Python::Object/;
+
+use parent 'Exporter';
+our @EXPORT_OK = ( qw/
+  inch cm mm pica
+/ );
+our %EXPORT_TAGS = (
+  all => \@EXPORT_OK
+);
+
+use constant {
+  inch => 72.0, 
+  pica => 12.0
+};
+use constant {
+  cm => inch / 2.54
+};
+use constant {
+  mm => cm * 0.1
+};
 
 =head1 IMPORT
 
 On importing it simply executes C<py_eval>'s import statements, which imports the library. This croaks if the ReportLab library cannot be imported.
 
-The module does not export any symbols.
+The module exports inch pica cm mm on request (or all using tag ':all').
 
 =head1 Inline::Python::ReportLab
 
