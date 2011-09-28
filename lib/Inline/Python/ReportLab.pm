@@ -34,23 +34,33 @@ our @ISA = 'Inline::Python::Object';
 
 =head1 IMPORT
 
-On importing it simply executes C<py_eval('from reportlab.pdfgen.canvas import Canvas')>, which imports the library. This croaks if the ReportLab library cannot be imported.
+On importing it simply executes C<py_eval>'s import statements, which imports the library. This croaks if the ReportLab library cannot be imported.
 
 The module does not export any symbols.
 
+=head1 Inline::Python::ReportLab
+
 =cut
 
-sub import {
+my $canvas_class;
+BEGIN {
+  $canvas_class = 'reportlab.pdfgen.canvas';
+}
+
+BEGIN {
   try {
-    py_eval( <<PYTHON_HEADER );
-import reportlab.pdfgen.canvas
-PYTHON_HEADER
+    py_eval( 'import reportlab' );
   } catch {
     croak "Inline::Python could not import ReportLab, is it installed correctly?";
   }
+
+  py_eval( <<PYTHON );
+import $canvas_class
+PYTHON
+
 }
 
-=head1 CONSTRUCTOR
+=head2 CONSTRUCTOR
 
  my $c = Inline::Python::ReportLab->Canvas('filename.pdf');
 
@@ -61,7 +71,39 @@ The constructor class method C<Canvas> (named for better analogy to the Python v
 sub Canvas {
   my $class = shift;
   my $filename = shift || croak "Must specify file name to contructor";
-  return bless(Inline::Python::Object->new('reportlab.pdfgen.canvas', 'Canvas', $filename), $class);
+  return bless(Inline::Python::Object->new($canvas_class, 'Canvas', $filename), $class);
+}
+
+=head1 Inline::Python::ReportLab::Platypus
+
+Provides the constructor class methods from reportlab.platypus, read its documentation for more info. 
+
+=cut
+
+package Inline::Python::ReportLab::Platypus;
+
+use strict;
+use warnings;
+
+use Inline::Python qw/py_eval py_study_package/;
+our @ISA = 'Inline::Python::Object';
+
+BEGIN {
+  my $python_class = 'reportlab.platypus';
+
+  py_eval( <<PYTHON );
+import $python_class
+PYTHON
+
+  my %platypus = py_study_package($python_class);
+  foreach my $object (keys %{$platypus{'classes'}}) {
+    no strict 'refs';
+    *{$object} = sub {
+      my $class = shift;
+      unshift @_, $object;
+      return bless(Inline::Python::Object->new('reportlab.platypus', @_), $class);
+    };
+  }
 }
 
 =head1 SEE ALSO
